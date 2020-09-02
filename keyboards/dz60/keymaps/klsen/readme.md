@@ -1,45 +1,44 @@
+# Kenneth Seneres's Personal Keymap
 
-Kenneth Seneres
-Jul. 11, 2020 but like a bigger range like jun-jul
-coronatime/sadboy hours
-learn how to use a readme dumbass
+**Created Jul. 11, 2020.**
 
-my keymap 
-make it nice
+*This is a fork of the QMK Firmware repository. Thank you to the QMK team and their contributors for building this foundation and providing good documentation of their open-source project.*
 
-features:
-  base layer:
-    split space. space on left, backspace on right
-    grave/tilde mixed with esc
+This keymap is for my DZ60 custom keyboard. This 60% keyboard splits spacebar into three different keys and has arrow keys. Pictures will be attached.
 
-  func layer: 
-    f1..12 on number row
-    media controls on qwerty
-    page up/down and home/end on arrow keys
-    delete on backspace
-    numpad on m,.jkluio and symbols on ;'p[
+### Features
 
-  rgb layer: 
-    change rgb modes on number row
-    change hue, sat, brightness on arrow keys and 2 keys on left
+There are three layers: the **base** layer, **function** layer, and **RGB** layer. Custom features include lighting indicators for caps lock and the function layer, lighting indicator when pressing the wrong backspace, cycling through custom static RGB colors, keycodes for lighting animations that didn't have them, and a WPM mode that runs the snake lighting animation at different speeds depending on your calculated words per minute.
 
-  other:
-    lights change on caps
-    lights change when switching to fn layer
-    using normal backspace makes keyboard red bc it's the wrong backspace
-    added keycodes for rgb modes that didn't have them ('twinkle', 'alternating')
-    can use cmd+shift+esc combo
-    wpm lighting mode using the snake animation
+**Base** layer:
+ - the standard QWERTY keys
+ - arrow keys
+ - space on left spacebar
+ - backspace on right spacebar and its usual spot
+ - grave/esc key so you can press ~ like usual and use esc easily
+ - right shift, alt, ctrl
+ 
+**Function** layer:
+ - FN keys on the number row
+ - delete on backspace
+ - media controls on qwerty keys
+ - home, end, page up, and page down on arrow keys
+ - the ` key
+ - numpad centered on 'k' with
+    - 0 is on n
+    - plus, minus, multiply, and divide symbols on ;'p[ 
+ - standard modifiers (shift, alt, etc.) in their usual spots
 
-planned features:
-  macros or something?
-  make pics of layouts
-  rgb mode where you can select between different plain colors: green, amber, blue, purple, etc.
-  format this readme
-  back up fork on github
+**RGB** layer: 
+ - lighting modes on number row
+    - plain, breathing, rainbow mood, rainbow swirl, snake, knight,
+     christmas, static gradient, test, alternating, twinkle
+ - plain mode cycles through 4 different colors
+    - green, amber, purple, blue
+ - adjust the plain color in HSV using left-right for hue, right alt and right control for saturation, and up-down for value
+ - WPM lighting mode on 'w'
 
-pipe dream:
-  use rgb breathing effect on sleep
-  some debug mode where the keyboard can teach you which key is which
-    or make a pretty graphic of your layout
-  per-key lighting hack where a some light blinks when a key is pressed. maybe it's the closest light, but what if it was random
+### Pipe dream features
+ - Use the RGB breathing effect when computer is asleep.
+ - A mode where the keyboard can teach you which key is which. Like, it'll tell you what the key you just pressed does.
+ - A per key lighting hack where one random LED breathes every time you press a key.
