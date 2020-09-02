@@ -1,13 +1,20 @@
-#include QMK_KEYBOARD_H
+// Personal keymap for my DZ60 keyboard.
+// I have a readme :)
+//
+// Kenneth Seneres
+// Sept. 2, 2020
 
-/* Hello hello
- * i have a readme now
- */
+#include QMK_KEYBOARD_H
+// #include <print.h>
 
 // custom colors here
-#define HSV_CUSTOM_GREEN 65, 232, 180
-#define HSV_CUSTOM_GREEN2 65, 232, 255
-#define HSV_CUSTOM_RED 0, 255, 150
+#define HSV_CUSTOM_GREEN    64 , 216, 104
+#define HSV_CUSTOM_ORANGE   16 , 248, 120
+#define HSV_CUSTOM_PURPLE   192, 224, 104
+#define HSV_CUSTOM_BLUE     120, 176, 104
+#define HSV_CUSTOM_RED      0  , 255, 150
+static uint8_t plain_color = 0;
+#define PLAIN_COLOR_MODES 4
 
 enum my_keycodes {
 	KC_BSPC2 = SAFE_RANGE,
@@ -36,81 +43,128 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END ),
 	[_rgb] = LAYOUT_all( \
-		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL, KC_NO, KC_NO , KC_NO  , \
-		KC_NO  , KC_NO  , WPM_MODE, KC_NO , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD, RGB_MOD, KC_NO , \
+		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL,KC_NO  , KC_NO , KC_NO  , \
+		KC_NO  , KC_NO  , WPM_MODE,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD,RGB_MOD, KC_NO , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_VAI, KC_TRNS, \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO, RGB_SAD, RGB_SAI, RGB_HUD, RGB_VAD, RGB_HUI)
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , RGB_SAD, RGB_SAI, RGB_HUD, RGB_VAD, RGB_HUI)
 };
 
-// code for rgb lighting layers (following example)
-const rgblight_segment_t PROGMEM caps_rgblayer[] = RGBLIGHT_LAYER_SEGMENTS(
-	// left side leds green
-	{0, 2, HSV_CUSTOM_GREEN2},
-	{14, 2, HSV_CUSTOM_GREEN2}
-);
-
-const rgblight_segment_t PROGMEM layer1_rgblayer[] = RGBLIGHT_LAYER_SEGMENTS(
-	// bottom row green
-	{8, 8, HSV_CUSTOM_GREEN}
-);
-
-const rgblight_segment_t PROGMEM backspace_rgblayer[] = RGBLIGHT_LAYER_SEGMENTS(
-	// all leds red
-	{0, 16, HSV_CUSTOM_RED}
-);
-
-const rgblight_segment_t* const PROGMEM rgblayers[] = RGBLIGHT_LAYERS_LIST(
-	caps_rgblayer,
-	layer1_rgblayer,
-	backspace_rgblayer
-);
-
 void keyboard_post_init_user(void) {
-	rgblight_layers = rgblayers;
+	// debug_enable = true;
 }
 
+// This is used for turning the lower row of LEDs brighter to show the fn layer.
 layer_state_t layer_state_set_user(layer_state_t state) {
-	// numbering follows order of rgblayers array
-	rgblight_set_layer_state(1, layer_state_cmp(state, _fn));
-	return state;
+    uint8_t layer = biton32(state);
+    static uint8_t mode = RGBLIGHT_MODE_STATIC_LIGHT;
+    static uint8_t prev_layer = _base;
+    uint8_t hue = rgblight_get_hue();
+    uint8_t sat = rgblight_get_sat();
+
+    // checks what layer is currently on
+    // needs to be able to revert to the old lighting mode when fn is released
+    // needs to do nothing when rgb layer is on
+    if (rgblight_get_mode() == RGBLIGHT_MODE_STATIC_LIGHT){
+        switch(layer) {
+            case _base:
+                if (prev_layer != _rgb) rgblight_mode(mode);
+                break;
+            case _fn:
+                mode = rgblight_get_mode();
+                rgblight_sethsv_range(hue, sat, 180, 8, 16);
+                break;
+            default: break;
+        }
+        prev_layer = layer;
+    }
+
+    return state;
 }
 
+// This is used to brighten the two leftmost LEDs to show that caps lock is on.
+// Only runs when the lighting mode is static/plain.
 bool led_update_user(led_t led_state) {
-	rgblight_set_layer_state(0, led_state.caps_lock);
-	return true;
+    static uint8_t caps_pressed = false;
+    uint8_t mode = rgblight_get_mode();
+    uint8_t hue = rgblight_get_hue();
+    uint8_t sat = rgblight_get_sat();
+    uint8_t val = rgblight_get_val();
+
+    if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
+        // code after caps has just turned off. led_state.caps_lock doesnt work because it'll run all the time
+        // reverts leds back to previous color
+        if (caps_pressed == true) {
+            caps_pressed = false;
+            rgblight_sethsv_at(hue, sat, val, 0);
+            rgblight_sethsv_at(hue, sat, val, 15);
+        }
+        // code for caps on
+        if (led_state.caps_lock == true) {
+            caps_pressed = true;
+            rgblight_sethsv_at(hue, sat, 255, 0);
+            rgblight_sethsv_at(hue, sat, 255, 15);
+        }
+    }
+    return true;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	static bool wpm_mode_active = false;
+	uint8_t prev_mode = rgblight_get_mode();
 	switch (keycode) {
 		// custom keycodes for lighting tricks
-		case KC_BSPC2:
+        // turn all lights red when pressing the wrong backspace. revert to previous lighting mode when released
+		case KC_BSPC2: ; // ; because of declaration after label (in start of case) error
+			static uint8_t mode, hue, sat, val;
 			if (record->event.pressed) {
 				register_code(KC_BSPC);
-				rgblight_set_layer_state(2, true);
+				mode = rgblight_get_mode();
+				hue = rgblight_get_hue();
+				sat = rgblight_get_sat();
+				val = rgblight_get_val();
+				rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+				rgblight_sethsv_noeeprom(HSV_CUSTOM_RED);
 			}
 			else {
 				unregister_code(KC_BSPC);
-				rgblight_set_layer_state(2, false);
+				rgblight_mode(mode);
+				rgblight_sethsv(hue, sat, val);
 			}
 			return true;
+        // keycode for alternating lighting mode. didn't have its own keycode before.
 		case RGB_ALT:
 			if (record->event.pressed) {
 				rgblight_mode(RGBLIGHT_MODE_ALTERNATING);
 			}
 			return true;
+        // same for twinkle lighting mode. guess it's not mature enough for QMK.
 		case RGB_TWKL:
 			if (record->event.pressed) {
 				// 6 different twinkle modes. cycle through them if pressed repeatedly, else go to 1st mode
 				uint8_t mode = rgblight_get_mode();
-				if (mode >= RGBLIGHT_MODE_TWINKLE && mode < RGBLIGHT_MODE_TWINKLE+5) { // +5 to avoid %6 tricks
+				if (mode >= RGBLIGHT_MODE_TWINKLE && mode < RGBLIGHT_MODE_TWINKLE+5) { // +5 instead of +6 to avoid %6 tricks
 					rgblight_mode(mode+1);
 				}
 				else rgblight_mode(RGBLIGHT_MODE_TWINKLE);
 			}
 			return true;
-		// code for basic wpm lighting mode
+        // using the rgb_mode_plain keycode to cycle through different colors instead of just keeping one.
+        // add more cases if you add more colors (and also change the defines on top thx)
+		case RGB_M_P:
+			if (record->event.pressed) {
+                if (prev_mode == RGBLIGHT_MODE_STATIC_LIGHT) plain_color = (plain_color + 1) % PLAIN_COLOR_MODES;
+				switch(plain_color) {
+					case 0: rgblight_sethsv(HSV_CUSTOM_GREEN); break;
+					case 1:	rgblight_sethsv(HSV_CUSTOM_ORANGE);	break;
+					case 2:	rgblight_sethsv(HSV_CUSTOM_PURPLE);	break;
+					case 3:	rgblight_sethsv(HSV_CUSTOM_BLUE); break;
+					default: break;
+				}
+			}
+			return true;
+        // runs the snake lighting animation at different speeds depending on wpm
+        // uses QMK's get_current_wpm() implementation.
 		case WPM_MODE:
 			if (record->event.pressed) {
 				if (wpm_mode_active == true) {
@@ -120,9 +174,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				else wpm_mode_active = true;
 			}
 			return true;
-		default: 
-			// rough numbers.
-			// numbers are not really accurate from what I can feel. think it's higher than it should be.
+		default:
+			// rough numbers. had to adjust, but this feels right.
 			if (wpm_mode_active == true) {
 				uint8_t wpm = get_current_wpm();
 				if (wpm >= 100 && wpm < 150) rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE+2);
@@ -133,14 +186,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	}
 }
 
-/*
-void suspend_power_down_user(void) {
-	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
-	while (rgblight_get_sat() < 255) rgblight_increase_sat_noeeprom();
-	while (rgblight_get_val() > 40) rgblight_decrease_val_noeeprom();
-}
+// tried to do lighting on computer sleep. doesn't work
+// void suspend_power_down_user(void) {
+// 	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
+// 	while (rgblight_get_sat() < 255) rgblight_increase_sat_noeeprom();
+// 	while (rgblight_get_val() > 40) rgblight_decrease_val_noeeprom();
+// }
 
-void suspend_wakeup_init_user(void) {
-	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-}
-*/
+// void suspend_wakeup_init_user(void) {
+// 	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+// }
