@@ -12,6 +12,8 @@ This keymap is for my DZ60 custom keyboard. This 60% keyboard splits spacebar in
 
 There are three layers: the **base** layer, **function** layer, and **RGB** layer. Custom features include lighting indicators for caps lock and the function layer, lighting indicator when pressing the wrong backspace, cycling through custom static RGB colors, keycodes for lighting animations that didn't have them, and a WPM mode that runs the snake lighting animation at different speeds depending on your calculated words per minute.
 
+I've written a keymap.c to json converter here! Whenever you make changes to the keymap, use this and upload it to the QMK Configurator so you can generate pictures of the new keymap.
+
 **Base** layer:
  - the standard QWERTY keys
  - arrow keys
