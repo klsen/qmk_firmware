@@ -4,7 +4,9 @@
 
 *This is a fork of the QMK Firmware repository. Thank you to the QMK team and their contributors for building this foundation and providing good documentation of their open-source project.*
 
-This keymap is for my DZ60 custom keyboard. This 60% keyboard splits spacebar into three different keys and has arrow keys. Pictures will be attached.
+This keymap is for my DZ60 custom keyboard. This 60% keyboard splits spacebar into three different keys and has arrow keys.
+
+![The keyboard](pictures/keyboard.jpg)
 
 ### Features
 
@@ -18,6 +20,8 @@ There are three layers: the **base** layer, **function** layer, and **RGB** laye
  - grave/esc key so you can press ~ like usual and use esc easily
  - right shift, alt, ctrl
  
+![Base layer](pictures/keymap_base.png)
+ 
 **Function** layer:
  - FN keys on the number row
  - delete on backspace
@@ -28,6 +32,8 @@ There are three layers: the **base** layer, **function** layer, and **RGB** laye
     - 0 is on n
     - plus, minus, multiply, and divide symbols on ;'p[ 
  - standard modifiers (shift, alt, etc.) in their usual spots
+ 
+![Function layer](pictures/keymap_fn.png)
 
 **RGB** layer: 
  - lighting modes on number row
@@ -37,6 +43,8 @@ There are three layers: the **base** layer, **function** layer, and **RGB** laye
     - green, amber, purple, blue
  - adjust the plain color in HSV using left-right for hue, right alt and right control for saturation, and up-down for value
  - WPM lighting mode on 'w'
+ 
+![RGB layer](pictures/keymap_rgb.png)
 
 ### Pipe dream features
  - Use the RGB breathing effect when computer is asleep.
