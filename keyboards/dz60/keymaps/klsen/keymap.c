@@ -88,9 +88,11 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     if (rgblight_get_mode() == RGBLIGHT_MODE_STATIC_LIGHT){
         switch(layer) {
             case _base:
+            case _base2:
                 if (prev_layer != _rgb) rgblight_mode(mode);
                 break;
             case _fn:
+            case _fn2:
                 mode = rgblight_get_mode();
                 rgblight_sethsv_range(hue, sat, 180, 8, 16);
                 break;
