@@ -21,7 +21,8 @@ enum my_keycodes {
 	RGB_ALT,
 	RGB_TWKL,
 	WPM_MODE,
-    SWP_SPC
+    SWP_SPC,
+    RGB_REAC
 };
 
 enum my_layers {
@@ -64,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
 		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL,KC_NO  , KC_NO , KC_NO  , \
-		KC_NO  , KC_NO  , WPM_MODE,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD,RGB_MOD, KC_NO , \
+		KC_NO  , KC_NO  , WPM_MODE,KC_NO  , RGB_REAC,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD,RGB_MOD, KC_NO , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_VAI, KC_TRNS, \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , RGB_SAD, RGB_SAI, RGB_HUD, RGB_VAD, RGB_HUI)
@@ -132,14 +133,16 @@ bool led_update_user(led_t led_state) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    static uint8_t mode, hue, sat, val;
 	static bool wpm_mode_active = false;
     static bool swap_space = false;
+    static bool reactive_lighting = false;
 	uint8_t prev_mode = rgblight_get_mode();
+
 	switch (keycode) {
 		// custom keycodes for lighting tricks
         // turn all lights red when pressing the wrong backspace. revert to previous lighting mode when released
 		case KC_BSPC2: ; // ; because of declaration after label (in start of case) error
-			static uint8_t mode, hue, sat, val;
 			if (record->event.pressed) {
 				register_code(KC_BSPC);
 				mode = rgblight_get_mode();
@@ -205,6 +208,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				}
 			}
 			return true;
+        // enables/disables reactive lighting hack
+        case RGB_REAC:
+            if (record->event.pressed) {
+                reactive_lighting = !reactive_lighting;
+                if (reactive_lighting == true) {
+                    mode = rgblight_get_mode();
+                    hue = rgblight_get_hue();
+                    sat = rgblight_get_sat();
+                    val = rgblight_get_val();
+                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+                    rgblight_sethsv_noeeprom(0, 0, 0);
+                }
+                else {
+                    rgblight_mode(mode);
+				    rgblight_sethsv(hue, sat, val);
+                }
+            }
         // runs the snake lighting animation at different speeds depending on wpm
         // uses QMK's get_current_wpm() implementation.
 		case WPM_MODE:
@@ -224,6 +244,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				else if (wpm >= 150) rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE+4);
 				else rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE);
 			}
+            if (reactive_lighting == true) {
+                int ledi = rand()%16;
+                // mode = rgblight_get_mode();
+				// hue = rgblight_get_hue();
+				// sat = rgblight_get_sat();
+				// val = rgblight_get_val();
+                if (record->event.pressed) {
+                    // only flashes for an instant and turns off before key up if i dont have the 2 lines i thought i didnt need.
+                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+                    rgblight_sethsv_noeeprom(0, 0, 0);
+                    rgblight_sethsv_at(hue, sat, val, ledi);
+                }
+                else {
+                    // rgblight_mode(mode);
+                    // rgblight_sethsv(hue, sat, val);
+                    // rgblight_sethsv_at(0, 0, 0, ledi);
+                }
+            }
 			return true;
 	}
 }
