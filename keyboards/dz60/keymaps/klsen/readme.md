@@ -14,6 +14,8 @@ There are three layers: the **base** layer, **function** layer, and **RGB** laye
 
 I've written a keymap.c to json converter here! Whenever you make changes to the keymap, use this and upload it to the QMK Configurator so you can generate pictures of the new keymap.
 
+New feature: fn+backspace (on upper right) now swaps the positions of the space and backspace keys on the bottom row to accommodate right-handed people.
+
 **Base** layer:
  - the standard QWERTY keys
  - arrow keys
