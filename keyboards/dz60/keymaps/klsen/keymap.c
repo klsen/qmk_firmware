@@ -170,8 +170,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
                     rgblight_sethsv_at(hue, sat, 255, 7);
                 }
-                if (swap_space == true) default_layer_set(1U << _base2);
-                else default_layer_set(1U << _base);
+                // if (swap_space == true) default_layer_set(1U << _base2);
+                // else default_layer_set(1U << _base);
             }
             else {
                 rgblight_sethsv_at(hue, sat, val, 7);
@@ -244,6 +244,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				else if (wpm >= 150) rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE+4);
 				else rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE);
 			}
+            if (swap_space && (keycode == KC_SPC || keycode == KC_BSPC || keycode == KC_DEL)) {
+                if (record->event.pressed) {
+                    if (keycode == KC_SPC) {
+                        unregister_code(KC_SPC);
+                        if (IS_LAYER_ON(_base)) register_code(KC_BSPC);
+                        if (IS_LAYER_ON(_fn)) register_code(KC_DEL);
+                    }
+                    else if (keycode == KC_BSPC || keycode == KC_DEL) {
+                        unregister_code(KC_BSPC);
+                        unregister_code(KC_DEL);
+                        register_code(KC_SPC);
+                    }
+                    return false;
+                }
+                else {
+                    unregister_code(KC_SPC);
+                    unregister_code(KC_BSPC);
+                    unregister_code(KC_DEL);
+                    return false;
+                }
+            }
             if (reactive_lighting == true) {
                 int ledi = rand()%16;
                 // mode = rgblight_get_mode();
