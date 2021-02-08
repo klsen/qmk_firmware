@@ -50,13 +50,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_VOLD, KC_VOLU, KC_MPLY, KC_MPRV, KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_MS_L, KC_MS_D, KC_MS_R, KC_NO  , KC_NO  , KC_NO  , KC_ACL0, KC_ACL1, KC_ACL2, KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_VOLD, KC_VOLU, KC_MPLY, KC_MPRV, KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		KC_NO  , _______, KC_WH_U, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO  , KC_NO  , KC_NO  , _______, _______, _______, KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
