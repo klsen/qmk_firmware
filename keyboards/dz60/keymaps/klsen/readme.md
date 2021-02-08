@@ -15,6 +15,7 @@ There are three layers: the **base** layer, **function** layer, and **RGB** laye
 I've written a keymap.c to json converter here! Whenever you make changes to the keymap, use this and upload it to the QMK Configurator so you can generate pictures of the new keymap.
 
 New feature: fn+backspace (on upper right) now swaps the positions of the space and backspace keys on the bottom row to accommodate right-handed people.
+New feature: mouse layer where capslock usually sits on toggle. Mouse movement on WASD, clicking on QER, scrolling by holding the center modifier button and using WASD.
 
 **Base** layer:
  - the standard QWERTY keys
@@ -38,6 +39,16 @@ New feature: fn+backspace (on upper right) now swaps the positions of the space 
  - standard modifiers (shift, alt, etc.) in their usual spots
  
 ![Function layer](pictures/keymap_fn.png)
+
+**Mouse** layer:
+ - movement on WASD
+ - left click on E, right click on Q, scroll click on R
+ - CTRL key still available while layer is on
+ - vertical and horizontal scrolling with WASD and holding the center modifier key (the button that activates the function layer)
+ - layer used with toggle instead of hold
+
+![Mouse layer](pictures/keymap_mouse.png)
+![Mouse modifier layer](pictures/keymap_mouse_mod.png)
 
 **RGB** layer: 
  - lighting modes on number row
