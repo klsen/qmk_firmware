@@ -53,13 +53,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_MS_L, KC_MS_D, KC_MS_R, KC_NO  , KC_NO  , KC_NO  , KC_ACL0, KC_ACL1, KC_ACL2, KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
+		_______, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_VOLD, KC_VOLU, KC_MPLY, KC_MPRV, KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO  , KC_NO  , KC_NO  , _______, _______, _______, KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
+		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
 		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL,KC_NO  , KC_NO , KC_NO  , \
@@ -80,6 +80,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     static uint8_t prev_layer = _base;
     uint8_t hue = rgblight_get_hue();
     uint8_t sat = rgblight_get_sat();
+    uint8_t val = rgblight_get_val();
 
     // checks what layer is currently on
     // needs to be able to revert to the old lighting mode when fn is released
@@ -90,9 +91,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
                 if (prev_layer != _rgb) rgblight_mode(mode);
                 break;
             case _fn:
+            case _mouse_mod:
                 mode = rgblight_get_mode();
                 rgblight_sethsv_range(hue, sat, 180, 8, 16);
                 break;
+            case _mouse:
+                rgblight_sethsv_range(hue, sat, val, 8, 16);
+                rgblight_sethsv_at(hue, sat, 180, 0);
+                rgblight_sethsv_at(hue, sat, 180, 15);
+
             default: break;
         }
         prev_layer = layer;
