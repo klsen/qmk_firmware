@@ -12,10 +12,17 @@ This keymap is for my DZ60 custom keyboard. This 60% keyboard splits spacebar in
 
 There are three layers: the **base** layer, **function** layer, and **RGB** layer. Custom features include lighting indicators for caps lock and the function layer, lighting indicator when pressing the wrong backspace, cycling through custom static RGB colors, keycodes for lighting animations that didn't have them, and a WPM mode that runs the snake lighting animation at different speeds depending on your calculated words per minute.
 
-I've written a keymap.c to json converter here! Whenever you make changes to the keymap, use this and upload it to the QMK Configurator so you can generate pictures of the new keymap.
+I've written a keymap.c to json converter here! Whenever you make changes to the keymap, use this and upload it to the QMK Configurator so you can generate pictures of the new keymap. 
+Step by step moves when you do an edit of the layout:
+ 1. edit keymap.c
+ 2. run the python script
+ 3. upload the JSON output to [QMK Configurator](https://config.qmk.fm/)
+ 4. Use the "print keymap layers" tool to grab pictures of the changes.
 
-New feature: fn+backspace (on upper right) now swaps the positions of the space and backspace keys on the bottom row to accommodate right-handed people.
-New feature: mouse layer where capslock usually sits on toggle. Mouse movement on WASD, clicking on QER, scrolling by holding the center modifier button and using WASD.
+Feature: fn+backspace (on upper right) now swaps the positions of the space and backspace keys on the bottom row to accommodate right-handed people.
+Feature: mouse layer where capslock usually sits on toggle. Mouse movement on WASD, clicking on QER, scrolling by holding the center modifier button and using WASD.
+
+New: Numpad is now for the left hand.
 
 **Base** layer:
  - the standard QWERTY keys
@@ -35,7 +42,7 @@ New feature: mouse layer where capslock usually sits on toggle. Mouse movement o
  - the ` key
  - numpad centered on 'k' with
     - 0 is on n
-    - plus, minus, multiply, and divide symbols on ;'p[ 
+    - plus, minus, multiply, and divide
  - standard modifiers (shift, alt, etc.) in their usual spots
  
 ![Function layer](pictures/keymap_fn.png)
@@ -65,3 +72,6 @@ New feature: mouse layer where capslock usually sits on toggle. Mouse movement o
  - Use the RGB breathing effect when computer is asleep.
  - A mode where the keyboard can teach you which key is which. Like, it'll tell you what the key you just pressed does.
  - A per key lighting hack where one random LED breathes every time you press a key.
+
+### Planned features
+ - Code to toggle the bright red backspace light on/off

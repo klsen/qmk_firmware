@@ -17,10 +17,10 @@ static uint8_t plain_color = 0;
 #define PLAIN_COLOR_MODES 4
 
 enum my_keycodes {
-	KC_BSPC2 = SAFE_RANGE,
-	RGB_ALT,
-	RGB_TWKL,
-	WPM_MODE,
+    KC_BSPC2 = SAFE_RANGE,
+    RGB_ALT,
+    RGB_TWKL,
+    WPM_MODE,
     SWP_SPC,
     RGB_REAC
 };
@@ -44,9 +44,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// secondary layout for alternate functions
     [_fn] = LAYOUT_all( \
 		KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_NO  , SWP_SPC, \
-		_______, KC_MUTE, KC_VOLU, KC_MPLY, KC_NO  , KC_NO  , KC_NO  , KC_7   , KC_8   , KC_9   , KC_PAST, KC_PSLS, KC_NO  , KC_CALC, \
-		_______, KC_MPRV, KC_VOLD, KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_4   , KC_5   , KC_6   , KC_PPLS, KC_PMNS, KC_NO  , \
-		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_NO  , _______, KC_PGUP, _______, \
+		_______, KC_VOLD, KC_VOLU, KC_7   , KC_8   , KC_9   , KC_PPLS, KC_PAST, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_CALC, \
+		_______, KC_MPRV, KC_MNXT, KC_4   , KC_5   , KC_6   , KC_PMNS, KC_PSLS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		_______, KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
