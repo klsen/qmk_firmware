@@ -18,6 +18,7 @@ static uint8_t plain_color = 0;
 
 enum my_keycodes {
     KC_BSPC2 = SAFE_RANGE,
+    BSPC_OFF,
     RGB_ALT,
     RGB_TWKL,
     WPM_MODE,
@@ -43,8 +44,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_LCTL, KC_LGUI, KC_LALT, KC_SPC , MO(_fn), KC_BSPC, KC_RALT, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT),
 	// secondary layout for alternate functions
     [_fn] = LAYOUT_all( \
-		KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_NO  , SWP_SPC, \
-		_______, KC_VOLD, KC_VOLU, KC_7   , KC_8   , KC_9   , KC_PPLS, KC_PAST, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_CALC, \
+		KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_NO  , BSPC_OFF, \
+		_______, KC_VOLD, KC_VOLU, KC_7   , KC_8   , KC_9   , KC_PPLS, KC_PAST, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , SWP_SPC, \
 		_______, KC_MPRV, KC_MNXT, KC_4   , KC_5   , KC_6   , KC_PMNS, KC_PSLS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
@@ -139,6 +140,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t mode, hue, sat, val;
 	static bool wpm_mode_active = false;
     static bool swap_space = false;
+    static bool backspace_light_off = false;
     static bool reactive_lighting = false;
 	uint8_t prev_mode = rgblight_get_mode();
 
@@ -148,12 +150,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case KC_BSPC2: ; // ; because of declaration after label (in start of case) error
 			if (record->event.pressed) {
 				register_code(KC_BSPC);
-				mode = rgblight_get_mode();
-				hue = rgblight_get_hue();
-				sat = rgblight_get_sat();
-				val = rgblight_get_val();
-				rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-				rgblight_sethsv_noeeprom(HSV_CUSTOM_RED);
+                    mode = rgblight_get_mode();
+                    hue = rgblight_get_hue();
+                    sat = rgblight_get_sat();
+                    val = rgblight_get_val();
+                if (!backspace_light_off) {
+                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+                    rgblight_sethsv_noeeprom(HSV_CUSTOM_RED);
+                }
 			}
 			else {
 				unregister_code(KC_BSPC);
@@ -161,6 +165,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				rgblight_sethsv(hue, sat, val);
 			}
 			return true;
+        case BSPC_OFF:
+            if (record->event.pressed) {
+                backspace_light_off = !backspace_light_off;
+            }
+            return true;
         // code to swap functionality of spacebar and backspace keys on a toggle.
         // using custom keycode instead of DF() keycode provided so I can turn on some lights
         case SWP_SPC:

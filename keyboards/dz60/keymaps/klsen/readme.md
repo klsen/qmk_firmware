@@ -17,12 +17,14 @@ Step by step moves when you do an edit of the layout:
  1. edit keymap.c
  2. run the python script
  3. upload the JSON output to [QMK Configurator](https://config.qmk.fm/)
- 4. Use the "print keymap layers" tool to grab pictures of the changes.
+ 4. use the "print keymap layers" tool to grab pictures of the changes
+ 5. name the picture the same as the picture of the layer you're changing
 
 Feature: fn+backspace (on upper right) now swaps the positions of the space and backspace keys on the bottom row to accommodate right-handed people.
 Feature: mouse layer where capslock usually sits on toggle. Mouse movement on WASD, clicking on QER, scrolling by holding the center modifier button and using WASD.
 
 New: Numpad is now for the left hand.
+New: You can now turn the bright red light for backspace on/off by pressing Fn+Backspace.
 
 **Base** layer:
  - the standard QWERTY keys
@@ -74,4 +76,4 @@ New: Numpad is now for the left hand.
  - A per key lighting hack where one random LED breathes every time you press a key.
 
 ### Planned features
- - Code to toggle the bright red backspace light on/off
+
