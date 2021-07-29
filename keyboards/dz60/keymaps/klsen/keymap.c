@@ -86,18 +86,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		_______, KC_NO  , KC_4   , KC_5   , KC_6   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_ENT , \
 		KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_NO  , _______, \
 		_______, _______, _______, KC_SPC , KC_TRNS, KC_BSPC, _______, _______, KC_NO  , KC_NO  , KC_NO ),
-    // mouse-mimicking layer
+    // mouse-mimicking layers
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,   KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		KC_ACL0, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		KC_ACL0, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_ACL2, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R,KC_NO, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
@@ -146,52 +146,66 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     if (rgblight_get_mode() == RGBLIGHT_MODE_STATIC_LIGHT){
         switch(layer) {
             case _base:
+            case _base2:
                 if (prev_layer != _rgb) rgblight_mode(mode);
                 break;
             case _fn:
-            case _mouse_mod:
+            case _fn2:
                 mode = rgblight_get_mode();
                 rgblight_sethsv_range(hue, sat, 180, 8, 16);
                 break;
-            case _mouse:
+            case _calc:
                 rgblight_sethsv_range(hue, sat, val, 8, 16);
                 rgblight_sethsv_at(hue, sat, 180, 0);
                 rgblight_sethsv_at(hue, sat, 180, 15);
-
+                break;
+            case _locked:
+                rgblight_sethsv_range(hue, sat, 30, 0, 16);     // not using rgblight_sethsv() to keep the global hue, sat, val values
+                break;
             default: break;
         }
-        prev_layer = layer;
+    }
+    switch(layer) {
+        case _mouse:
+            rgblight_mode_noeeprom(RGBLIGHT_MODE_TWINKLE+2);
+            break;
+        case _base:
+        case _base2:
+            if (prev_layer == _mouse || prev_layer == _mouse_mod) rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+        default:
+            break;
     }
 
+    prev_layer = layer;
     return state;
 }
 
 // This is used to brighten the two leftmost LEDs to show that caps lock is on.
 // Only runs when the lighting mode is static/plain.
-bool led_update_user(led_t led_state) {
-    static uint8_t caps_pressed = false;
-    uint8_t mode = rgblight_get_mode();
-    uint8_t hue = rgblight_get_hue();
-    uint8_t sat = rgblight_get_sat();
-    uint8_t val = rgblight_get_val();
+// bool led_update_user(led_t led_state) {
+//     static uint8_t caps_pressed = false;
+//     uint8_t mode = rgblight_get_mode();
+//     uint8_t hue = rgblight_get_hue();
+//     uint8_t sat = rgblight_get_sat();
+//     uint8_t val = rgblight_get_val();
 
-    if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
-        // code after caps has just turned off. led_state.caps_lock doesnt work because it'll run all the time
-        // reverts leds back to previous color
-        if (caps_pressed == true) {
-            caps_pressed = false;
-            rgblight_sethsv_at(hue, sat, val, 0);
-            rgblight_sethsv_at(hue, sat, val, 15);
-        }
-        // code for caps on
-        if (led_state.caps_lock == true) {
-            caps_pressed = true;
-            rgblight_sethsv_at(hue, sat, 255, 0);
-            rgblight_sethsv_at(hue, sat, 255, 15);
-        }
-    }
-    return true;
-}
+//     if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
+//         // code after caps has just turned off. led_state.caps_lock doesnt work because it'll run all the time
+//         // reverts leds back to previous color
+//         if (caps_pressed == true) {
+//             caps_pressed = false;
+//             rgblight_sethsv_at(hue, sat, val, 0);
+//             rgblight_sethsv_at(hue, sat, val, 15);
+//         }
+//         // code for caps on
+//         if (led_state.caps_lock == true) {
+//             caps_pressed = true;
+//             rgblight_sethsv_at(hue, sat, 255, 0);
+//             rgblight_sethsv_at(hue, sat, 255, 15);
+//         }
+//     }
+//     return true;
+// }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t mode, hue, sat, val;
@@ -333,24 +347,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             //         return false;
             //     }
             // }
-            if (reactive_lighting == true) {
-                int ledi = rand()%16;
-                // mode = rgblight_get_mode();
-				// hue = rgblight_get_hue();
-				// sat = rgblight_get_sat();
-				// val = rgblight_get_val();
-                if (record->event.pressed) {
-                    // only flashes for an instant and turns off before key up if i dont have the 2 lines i thought i didnt need.
-                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-                    rgblight_sethsv_noeeprom(0, 0, 0);
-                    rgblight_sethsv_at(hue, sat, val, ledi);
-                }
-                else {
-                    // rgblight_mode(mode);
-                    // rgblight_sethsv(hue, sat, val);
-                    // rgblight_sethsv_at(0, 0, 0, ledi);
-                }
-            }
+
+            // if (reactive_lighting == true) {
+            //     int ledi = rand()%16;
+            //     // mode = rgblight_get_mode();
+			// 	// hue = rgblight_get_hue();
+			// 	// sat = rgblight_get_sat();
+			// 	// val = rgblight_get_val();
+            //     if (record->event.pressed) {
+            //         // only flashes for an instant and turns off before key up if i dont have the 2 lines i thought i didnt need.
+            //         rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+            //         rgblight_sethsv_noeeprom(0, 0, 0);
+            //         rgblight_sethsv_at(hue, sat, val, ledi);
+            //     }
+            //     else {
+            //         // rgblight_mode(mode);
+            //         // rgblight_sethsv(hue, sat, val);
+            //         // rgblight_sethsv_at(0, 0, 0, ledi);
+            //     }
+            // }
 			return true;
 	}
 }
