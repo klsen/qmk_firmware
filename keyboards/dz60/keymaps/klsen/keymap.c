@@ -22,16 +22,30 @@ enum my_keycodes {
     RGB_ALT,
     RGB_TWKL,
     WPM_MODE,
-    SWP_SPC,
+    // SWP_SPC,
     RGB_REAC
 };
 
 enum my_layers {
 	_base,
 	_fn,
+    _calc,
     _mouse,
     _mouse_mod,
-	_rgb
+	_rgb,
+    _locked
+};
+
+static bool swap_space = false;
+
+enum combos {
+    SWP_SPC
+};
+
+const uint16_t PROGMEM space_backspace_combo[] = {KC_SPC, KC_DEL, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    [SWP_SPC] = COMBO(space_backspace_combo, SWP_SPC)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -39,27 +53,35 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[_base] = LAYOUT_all( \
 		KC_GESC, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS, KC_EQL , KC_NO  , KC_BSPC2, \
 		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   , KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC, KC_RBRC, KC_BSLS, \
-		TG(_mouse), KC_A, KC_S   , KC_D   , KC_F   , KC_G   , KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT, KC_ENT , \
+		TG(_calc), KC_A , KC_S   , KC_D   , KC_F   , KC_G   , KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT, KC_ENT , \
 		KC_LSFT, KC_NO  , KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT, KC_UP  , MO(_rgb), \
 		KC_LCTL, KC_LGUI, KC_LALT, KC_SPC , MO(_fn), KC_BSPC, KC_RALT, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT),
 	// secondary layout for alternate functions
     [_fn] = LAYOUT_all( \
 		KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_NO  , BSPC_OFF, \
-		_______, KC_VOLD, KC_VOLU, KC_7   , KC_8   , KC_9   , KC_PPLS, KC_PAST, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , SWP_SPC, \
-		_______, KC_MPRV, KC_MNXT, KC_4   , KC_5   , KC_6   , KC_PMNS, KC_PSLS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
-		_______, KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
+		_______, KC_MUTE, KC_VOLU, KC_MPLY, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , TG(_locked), \
+		TG(_mouse),KC_MPRV,KC_VOLD,KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
+    // layer for calculator
+    [_calc] = LAYOUT_all( \
+        KC_GRV , KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, KC_PEQL, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		_______, KC_NO  , KC_7   , KC_8   , KC_9   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		_______, KC_NO  , KC_4   , KC_5   , KC_6   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_ENT , \
+		KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_NO  , _______, \
+		_______, _______, _______, KC_SPC , KC_TRNS, KC_BSPC, _______, _______, KC_NO  , KC_NO  , KC_NO ),
+    // mouse-mimicking layer
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		_______, KC_MS_L, KC_MS_D, KC_MS_R, KC_NO  , KC_NO  , KC_NO  , KC_ACL0, KC_ACL1, KC_ACL2, KC_NO  , KC_NO  , KC_NO  , \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
-		_______, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
+		KC_NO  , KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_ACL0, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		KC_ACL2, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		_______, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO  , KC_NO  , KC_NO  , _______, _______, _______, KC_NO  , KC_NO  , KC_NO  , \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
@@ -67,8 +89,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_NO  , KC_NO  , WPM_MODE,KC_NO  , RGB_REAC,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD,RGB_MOD, KC_NO , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_VAI, KC_TRNS, \
-		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , RGB_SAD, RGB_SAI, RGB_HUD, RGB_VAD, RGB_HUI)
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , RGB_SAD, RGB_SAI, RGB_HUD, RGB_VAD, RGB_HUI),
+    // layer where all the keys do nothing so you can just smack them
+    [_locked] = LAYOUT_all( \
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO , KC_NO  , \
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , TG(_locked) , \
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  )
 };
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch(combo_index) {
+        case SWP_SPC:
+            if (pressed) {
+                tap_code16(KC_A);
+                swap_space = !swap_space;
+            }
+            break;
+    }
+}
 
 void keyboard_post_init_user(void) {
 	// debug_enable = true;
@@ -139,7 +179,7 @@ bool led_update_user(led_t led_state) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t mode, hue, sat, val;
 	static bool wpm_mode_active = false;
-    static bool swap_space = false;
+    // static bool swap_space = false;
     static bool backspace_light_off = false;
     static bool reactive_lighting = false;
 	uint8_t prev_mode = rgblight_get_mode();
@@ -172,21 +212,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
         // code to swap functionality of spacebar and backspace keys on a toggle.
         // using custom keycode instead of DF() keycode provided so I can turn on some lights
-        case SWP_SPC:
-            if (record->event.pressed) {
-                swap_space = !swap_space;
-                mode = rgblight_get_mode();
-				hue = rgblight_get_hue();
-				sat = rgblight_get_sat();
-				val = rgblight_get_val();
-                if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
-                    rgblight_sethsv_at(hue, sat, 255, 7);
-                }
-            }
-            else {
-                rgblight_sethsv_at(hue, sat, val, 7);
-            }
-            return true;
+        // case SWP_SPC:
+        //     if (record->event.pressed) {
+        //         swap_space = !swap_space;
+        //         mode = rgblight_get_mode();
+		// 		hue = rgblight_get_hue();
+		// 		sat = rgblight_get_sat();
+		// 		val = rgblight_get_val();
+        //         if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
+        //             rgblight_sethsv_at(hue, sat, 255, 7);
+        //         }
+        //     }
+        //     else {
+        //         rgblight_sethsv_at(hue, sat, val, 7);
+        //     }
+        //     return true;
         // keycode for alternating lighting mode. didn't have its own keycode before.
 		case RGB_ALT:
 			if (record->event.pressed) {
@@ -258,13 +298,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (swap_space && (keycode == KC_SPC || keycode == KC_BSPC || keycode == KC_DEL)) {
                 if (record->event.pressed) {
                     if (keycode == KC_SPC) {
-                        unregister_code(KC_SPC);
+                        // unregister_code(KC_SPC);
                         if (IS_LAYER_ON(_base)) register_code(KC_BSPC);
                         if (IS_LAYER_ON(_fn)) register_code(KC_DEL);
                     }
                     else if (keycode == KC_BSPC || keycode == KC_DEL) {
-                        unregister_code(KC_BSPC);
-                        unregister_code(KC_DEL);
+                        // unregister_code(KC_BSPC);
+                        // unregister_code(KC_DEL);
                         register_code(KC_SPC);
                     }
                     return false;
