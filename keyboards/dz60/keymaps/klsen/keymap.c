@@ -18,8 +18,10 @@ static uint8_t plain_color = 0;
 enum my_keycodes {
     KC_BSPC2 = SAFE_RANGE,
     BSPC_OFF,
-    RGB_ALT,
+    RGB_MOOD,
+    RGB_SWRL,
     RGB_TWKL,
+    RGB_TWKL2,
     WPM_MODE,
     RGB_REAC
 };
@@ -102,12 +104,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R,KC_NO, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		TG(_mouse),KC_WH_L,KC_WH_D,KC_WH_R,KC_NO   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_NO  , _______, KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
-		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL,KC_NO  , KC_NO , KC_NO  , \
+		RGB_TOG, RGB_M_P, RGB_M_B,RGB_TWKL,RGB_TWKL2,RGB_MOOD,RGB_SWRL,RGB_M_X, RGB_M_G, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , WPM_MODE,KC_NO  , RGB_REAC,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_RMOD,RGB_MOD, KC_NO , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , RGB_VAI, KC_TRNS, \
@@ -192,7 +194,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t mode, hue, sat, val;
 	static bool wpm_mode_active = false;
     static bool backspace_light_off = false;
-    static bool reactive_lighting = false;
 	uint8_t prev_mode = rgblight_get_mode();
 
 	switch (keycode) {
@@ -216,28 +217,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				rgblight_sethsv(hue, sat, val);
 			}
 			return true;
+        // code to turn off the bright backspace lighting on-the-fly
         case BSPC_OFF:
-            if (record->event.pressed) {
-                backspace_light_off = !backspace_light_off;
-            }
+            if (record->event.pressed) backspace_light_off = !backspace_light_off;
             return true;
-        // keycode for alternating lighting mode. didn't have its own keycode before.
-		case RGB_ALT:
-			if (record->event.pressed) {
-				rgblight_mode(RGBLIGHT_MODE_ALTERNATING);
-			}
-			return true;
-        // same for twinkle lighting mode. guess it's not mature enough for QMK.
+        // RGB lighting code
+        // I want to only use 1 speed for rainbow mood, rainbow swirl, and twinkle modes
+        case RGB_MOOD:
+            if (record->event.pressed) rgblight_mode(RGBLIGHT_MODE_RAINBOW_MOOD+2);
+            return true;
+        case RGB_SWRL:
+            if (record->event.pressed) rgblight_mode(RGBLIGHT_MODE_RAINBOW_SWIRL+4);
+            return true;
+        // twinkle lighting mode. it's got its own keycode now, but then I'd have to update this repo.
 		case RGB_TWKL:
-			if (record->event.pressed) {
-				// 6 different twinkle modes. cycle through them if pressed repeatedly, else go to 1st mode
-				uint8_t mode = rgblight_get_mode();
-				if (mode >= RGBLIGHT_MODE_TWINKLE && mode < RGBLIGHT_MODE_TWINKLE+5) { // +5 instead of +6 to avoid %6 tricks
-					rgblight_mode(mode+1);
-				}
-				else rgblight_mode(RGBLIGHT_MODE_TWINKLE);
-			}
-			return true;
+			if (record->event.pressed) rgblight_mode(RGBLIGHT_MODE_TWINKLE+2);
+            return true;
+        case RGB_TWKL2:
+            if (record->event.pressed) rgblight_mode(RGBLIGHT_MODE_TWINKLE+5);
+            return true;
         // using the rgb_mode_plain keycode to cycle through different colors instead of just keeping one.
         // add more cases if you add more colors (and also change the defines on top thx)
 		case RGB_M_P:
@@ -252,25 +250,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				}
 			}
 			return true;
-        // enables/disables reactive lighting hack
-        case RGB_REAC:
-            if (record->event.pressed) {
-                reactive_lighting = !reactive_lighting;
-                if (reactive_lighting == true) {
-                    mode = rgblight_get_mode();
-                    hue = rgblight_get_hue();
-                    sat = rgblight_get_sat();
-                    val = rgblight_get_val();
-                    rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-                    rgblight_sethsv_noeeprom(0, 0, 0);
-                }
-                else {
-                    rgblight_mode(mode);
-				    rgblight_sethsv(hue, sat, val);
-                }
-            }
-        // runs the snake lighting animation at different speeds depending on wpm
-        // uses QMK's get_current_wpm() implementation.
 		case WPM_MODE:
 			if (record->event.pressed) {
 				if (wpm_mode_active == true) {
