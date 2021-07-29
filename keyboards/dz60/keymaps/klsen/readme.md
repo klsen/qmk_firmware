@@ -76,4 +76,7 @@ New: You can now turn the bright red light for backspace on/off by pressing Fn+B
  - A per key lighting hack where one random LED breathes every time you press a key.
 
 ### Planned features
-
+ - Move calculator into its own layer toggled by capslock.
+ - Move mouse layer to fn+capslock.
+ - Change "swap space" functionality so that it's activated by pressing fn+space+backspace.
+ - Add lighting effects when these things are activated, like "twinkle" or "breathing".
