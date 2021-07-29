@@ -27,9 +27,10 @@ enum my_keycodes {
 enum my_layers {
 	_base,
 	_fn,
+    _calc,
     _base2,
     _fn2,
-    _calc,
+    _calc2,
     _mouse,
     _mouse_mod,
 	_rgb,
@@ -63,6 +64,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		TG(_mouse),KC_MPRV,KC_VOLD,KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
+    // layer for calculator
+    [_calc] = LAYOUT_all( \
+        KC_GRV , KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, KC_PEQL, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_CALC, KC_NO  , KC_7   , KC_8   , KC_9   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		_______, KC_NO  , KC_4   , KC_5   , KC_6   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_ENT , \
+		KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_NO  , _______, \
+		KC_NO  , KC_NO  , KC_NO  , KC_SPC , KC_TRNS, KC_BSPC, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO ),
     // primary layer with space and backspace swapped
     [_base2] = LAYOUT_all( \
 		KC_GESC, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS, KC_EQL , KC_NO  , KC_BSPC2, \
@@ -77,26 +85,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		TG(_mouse),KC_MPRV,KC_VOLD,KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, KC_DEL , KC_TRNS, _______, _______, _______, KC_HOME, KC_PGDN, KC_END),
-    // layer for calculator
+    // calc layer with space and backspace swapped
     [_calc] = LAYOUT_all( \
         KC_GRV , KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, KC_PEQL, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		_______, KC_NO  , KC_7   , KC_8   , KC_9   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_CALC, KC_NO  , KC_7   , KC_8   , KC_9   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_4   , KC_5   , KC_6   , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_ENT , \
 		KC_NO  , KC_NO  , KC_0   , KC_1   , KC_2   , KC_3   , KC_DOT , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_NO  , _______, \
-		_______, _______, _______, KC_SPC , KC_TRNS, KC_BSPC, _______, _______, KC_NO  , KC_NO  , KC_NO ),
+		KC_NO  , KC_NO  , KC_NO  , KC_BSPC, KC_TRNS, KC_SPC , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO ),
     // mouse-mimicking layers
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,   KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_ACL0, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		KC_ACL2, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
+		KC_LCTL, KC_NO  , KC_NO  , KC_ACL2, MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R,KC_NO, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
+		_______, KC_NO  , KC_NO  , _______, KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
 	[_rgb] = LAYOUT_all( \
 		RGB_TOG, RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW,RGB_M_SN,RGB_M_K, RGB_M_X, RGB_M_G, RGB_M_T, RGB_ALT, RGB_TWKL,KC_NO  , KC_NO , KC_NO  , \
