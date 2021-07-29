@@ -29,6 +29,8 @@ enum my_keycodes {
 enum my_layers {
 	_base,
 	_fn,
+    _base2,
+    _fn2,
     _calc,
     _mouse,
     _mouse_mod,
@@ -63,6 +65,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		TG(_mouse),KC_MPRV,KC_VOLD,KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
 		_______, _______, _______, _______, KC_TRNS, KC_DEL , _______, _______, KC_HOME, KC_PGDN, KC_END),
+    // primary layer with space and backspace swapped
+    [_base2] = LAYOUT_all( \
+		KC_GESC, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS, KC_EQL , KC_NO  , KC_BSPC2, \
+		KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   , KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC, KC_RBRC, KC_BSLS, \
+		TG(_calc), KC_A , KC_S   , KC_D   , KC_F   , KC_G   , KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT, KC_ENT , \
+		KC_LSFT, KC_NO  , KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT, KC_UP  , MO(_rgb), \
+		KC_LCTL, KC_LGUI, KC_LALT, KC_BSPC, MO(_fn2), KC_SPC , KC_RALT, KC_RCTL, KC_LEFT, KC_DOWN, KC_RGHT),
+	// secondary layer with space and backspace swapped
+    [_fn2] = LAYOUT_all( \
+		KC_GRV , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_NO  , BSPC_OFF, \
+		_______, KC_MUTE, KC_VOLU, KC_MPLY, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , TG(_locked), \
+		TG(_mouse),KC_MPRV,KC_VOLD,KC_MNXT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
+		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, KC_PGUP, _______, \
+		_______, _______, _______, KC_DEL , KC_TRNS, _______, _______, _______, KC_HOME, KC_PGDN, KC_END),
     // layer for calculator
     [_calc] = LAYOUT_all( \
         KC_GRV , KC_PPLS, KC_PMNS, KC_PAST, KC_PSLS, KC_PEQL, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
@@ -74,13 +90,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_mouse] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , KC_BTN2, KC_MS_U, KC_BTN1, KC_BTN3, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		KC_NO  , KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		KC_NO  , KC_MS_L, KC_MS_D, KC_MS_R, KC_NO,   KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_ACL0, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		KC_ACL2, KC_NO  , KC_NO  , KC_NO  , MO(_mouse_mod),KC_NO, KC_NO, KC_NO, KC_NO  , KC_NO  , KC_NO  ),
     [_mouse_mod] = LAYOUT_all( \
 		KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		KC_NO  , _______, KC_WH_U, _______, _______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
-		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
+		TG(_mouse), KC_WH_L, KC_WH_D, KC_WH_R,KC_NO, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , _______, \
 		_______, KC_NO  , KC_NO  , KC_NO  , KC_TRNS, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ),
     // layout for setting rgb
@@ -103,8 +119,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     switch(combo_index) {
         case SWP_SPC:
             if (pressed) {
-                tap_code16(KC_A);
                 swap_space = !swap_space;
+                if (swap_space) default_layer_set(1U << _base2);
+                else default_layer_set(1U << _base);
             }
             break;
     }
@@ -295,27 +312,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				else rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE);
 			}
             // code for handling space and backspace swap
-            if (swap_space && (keycode == KC_SPC || keycode == KC_BSPC || keycode == KC_DEL)) {
-                if (record->event.pressed) {
-                    if (keycode == KC_SPC) {
-                        // unregister_code(KC_SPC);
-                        if (IS_LAYER_ON(_base)) register_code(KC_BSPC);
-                        if (IS_LAYER_ON(_fn)) register_code(KC_DEL);
-                    }
-                    else if (keycode == KC_BSPC || keycode == KC_DEL) {
-                        // unregister_code(KC_BSPC);
-                        // unregister_code(KC_DEL);
-                        register_code(KC_SPC);
-                    }
-                    return false;
-                }
-                else {
-                    unregister_code(KC_SPC);
-                    unregister_code(KC_BSPC);
-                    unregister_code(KC_DEL);
-                    return false;
-                }
-            }
+            // if (swap_space && (keycode == KC_SPC || keycode == KC_BSPC || keycode == KC_DEL)) {
+            //     if (record->event.pressed) {
+            //         if (keycode == KC_SPC) {
+            //             // unregister_code(KC_SPC);
+            //             if (IS_LAYER_ON(_base)) register_code(KC_BSPC);
+            //             if (IS_LAYER_ON(_fn)) register_code(KC_DEL);
+            //         }
+            //         else if (keycode == KC_BSPC || keycode == KC_DEL) {
+            //             // unregister_code(KC_BSPC);
+            //             // unregister_code(KC_DEL);
+            //             register_code(KC_SPC);
+            //         }
+            //         return false;
+            //     }
+            //     else {
+            //         unregister_code(KC_SPC);
+            //         unregister_code(KC_BSPC);
+            //         unregister_code(KC_DEL);
+            //         return false;
+            //     }
+            // }
             if (reactive_lighting == true) {
                 int ledi = rand()%16;
                 // mode = rgblight_get_mode();
