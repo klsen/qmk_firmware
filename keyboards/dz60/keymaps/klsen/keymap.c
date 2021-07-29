@@ -5,7 +5,6 @@
 // Sept. 2, 2020
 
 #include QMK_KEYBOARD_H
-// #include <print.h>
 
 // custom colors here
 #define HSV_CUSTOM_GREEN    64 , 216, 104
@@ -22,7 +21,6 @@ enum my_keycodes {
     RGB_ALT,
     RGB_TWKL,
     WPM_MODE,
-    // SWP_SPC,
     RGB_REAC
 };
 
@@ -117,6 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
     switch(combo_index) {
+        // code to swap space and backspace keys when space+fn+backspace are pressed
         case SWP_SPC:
             if (pressed) {
                 swap_space = !swap_space;
@@ -165,6 +164,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             default: break;
         }
     }
+    // code for mouse layer is separate since it's using an animation
     switch(layer) {
         case _mouse:
             rgblight_mode_noeeprom(RGBLIGHT_MODE_TWINKLE+2);
@@ -180,37 +180,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-// This is used to brighten the two leftmost LEDs to show that caps lock is on.
-// Only runs when the lighting mode is static/plain.
-// bool led_update_user(led_t led_state) {
-//     static uint8_t caps_pressed = false;
-//     uint8_t mode = rgblight_get_mode();
-//     uint8_t hue = rgblight_get_hue();
-//     uint8_t sat = rgblight_get_sat();
-//     uint8_t val = rgblight_get_val();
-
-//     if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
-//         // code after caps has just turned off. led_state.caps_lock doesnt work because it'll run all the time
-//         // reverts leds back to previous color
-//         if (caps_pressed == true) {
-//             caps_pressed = false;
-//             rgblight_sethsv_at(hue, sat, val, 0);
-//             rgblight_sethsv_at(hue, sat, val, 15);
-//         }
-//         // code for caps on
-//         if (led_state.caps_lock == true) {
-//             caps_pressed = true;
-//             rgblight_sethsv_at(hue, sat, 255, 0);
-//             rgblight_sethsv_at(hue, sat, 255, 15);
-//         }
-//     }
-//     return true;
-// }
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint8_t mode, hue, sat, val;
 	static bool wpm_mode_active = false;
-    // static bool swap_space = false;
     static bool backspace_light_off = false;
     static bool reactive_lighting = false;
 	uint8_t prev_mode = rgblight_get_mode();
@@ -241,23 +213,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 backspace_light_off = !backspace_light_off;
             }
             return true;
-        // code to swap functionality of spacebar and backspace keys on a toggle.
-        // using custom keycode instead of DF() keycode provided so I can turn on some lights
-        // case SWP_SPC:
-        //     if (record->event.pressed) {
-        //         swap_space = !swap_space;
-        //         mode = rgblight_get_mode();
-		// 		hue = rgblight_get_hue();
-		// 		sat = rgblight_get_sat();
-		// 		val = rgblight_get_val();
-        //         if (mode == RGBLIGHT_MODE_STATIC_LIGHT) {
-        //             rgblight_sethsv_at(hue, sat, 255, 7);
-        //         }
-        //     }
-        //     else {
-        //         rgblight_sethsv_at(hue, sat, val, 7);
-        //     }
-        //     return true;
         // keycode for alternating lighting mode. didn't have its own keycode before.
 		case RGB_ALT:
 			if (record->event.pressed) {
@@ -325,58 +280,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				else if (wpm >= 150) rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE+4);
 				else rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE);
 			}
-            // code for handling space and backspace swap
-            // if (swap_space && (keycode == KC_SPC || keycode == KC_BSPC || keycode == KC_DEL)) {
-            //     if (record->event.pressed) {
-            //         if (keycode == KC_SPC) {
-            //             // unregister_code(KC_SPC);
-            //             if (IS_LAYER_ON(_base)) register_code(KC_BSPC);
-            //             if (IS_LAYER_ON(_fn)) register_code(KC_DEL);
-            //         }
-            //         else if (keycode == KC_BSPC || keycode == KC_DEL) {
-            //             // unregister_code(KC_BSPC);
-            //             // unregister_code(KC_DEL);
-            //             register_code(KC_SPC);
-            //         }
-            //         return false;
-            //     }
-            //     else {
-            //         unregister_code(KC_SPC);
-            //         unregister_code(KC_BSPC);
-            //         unregister_code(KC_DEL);
-            //         return false;
-            //     }
-            // }
-
-            // if (reactive_lighting == true) {
-            //     int ledi = rand()%16;
-            //     // mode = rgblight_get_mode();
-			// 	// hue = rgblight_get_hue();
-			// 	// sat = rgblight_get_sat();
-			// 	// val = rgblight_get_val();
-            //     if (record->event.pressed) {
-            //         // only flashes for an instant and turns off before key up if i dont have the 2 lines i thought i didnt need.
-            //         rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-            //         rgblight_sethsv_noeeprom(0, 0, 0);
-            //         rgblight_sethsv_at(hue, sat, val, ledi);
-            //     }
-            //     else {
-            //         // rgblight_mode(mode);
-            //         // rgblight_sethsv(hue, sat, val);
-            //         // rgblight_sethsv_at(0, 0, 0, ledi);
-            //     }
-            // }
 			return true;
 	}
 }
-
-// tried to do lighting on computer sleep. doesn't work
-// void suspend_power_down_user(void) {
-// 	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
-// 	while (rgblight_get_sat() < 255) rgblight_increase_sat_noeeprom();
-// 	while (rgblight_get_val() > 40) rgblight_decrease_val_noeeprom();
-// }
-
-// void suspend_wakeup_init_user(void) {
-// 	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-// }
