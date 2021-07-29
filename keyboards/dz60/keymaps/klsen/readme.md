@@ -28,7 +28,7 @@ Feature: You can now turn the bright red light for backspace on/off by pressing 
 
 New: The "swap space" feature is now performed by pressing space+fn+backspace.
 New: The calculator feature has been moved to its own layer. It's toggled on by the caps lock key.
-New: The mouse layer has been adjusted so that the shift and ctrl keys slow and speed up the cursor instead of jkl for one-handed use. It also has new lighting.
+New: The mouse layer has been adjusted so that the shift and ctrl keys slow and speed up the cursor instead of jkl for one-handed use. Mouse buttons 4 and 5 are now available. It also has new lighting.
 New: A locked layer where almost all keys do nothing so you can test how the switches feel without unplugging the board. It has its own lighting style.
 New: There are now less RGB modes to scroll through. Mostly just removed the...ugly...ones and made it so animations only run at one speed.
 
@@ -63,7 +63,8 @@ New: There are now less RGB modes to scroll through. Mostly just removed the...u
 
 **Mouse** layer:
  - movement on WASD
- - left click on E, right click on Q, scroll click on R
+ - left click on E, right click on Q, scroll click on 2
+ - previous, forward buttons on 1, 3
  - CTRL key still available while layer is on
  - vertical and horizontal scrolling with WASD and holding the center modifier key (the button that activates the function layer)
  - layer used with toggle instead of hold
@@ -96,3 +97,4 @@ New: There are now less RGB modes to scroll through. Mostly just removed the...u
 
 ### Planned features
  - Implement "swap space" with the "process_record_user" method instead of the "extra layers" method.
+ - Mac layer
