@@ -17,7 +17,7 @@
 #define MK_W_INTERVAL_2 40
 
 #define COMBO_COUNT 1
-#define COMBO_TERM 200
+#define COMBO_TERM 50
 
 // hope i'm not breaking anything
 //#define NO_SUSPEND_POWER_DOWN
