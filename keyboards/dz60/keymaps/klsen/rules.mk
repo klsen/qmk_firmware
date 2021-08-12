@@ -1,0 +1,3 @@
+WPM_ENABLE = yes
+COMBO_ENABLE = yes
+# CONSOLE_ENABLE = yes
