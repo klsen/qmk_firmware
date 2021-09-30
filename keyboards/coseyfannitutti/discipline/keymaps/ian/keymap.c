@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // extra layer for mac os
   [_mac2] = LAYOUT_65_split_space(
     LALT(KC_GRV),     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+    _______,          _______, LALT(KC_RIGHT), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     _______,          _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______, HELLO,            _______,
     _______,                   _______, _______, _______, _______, LALT(KC_LEFT), _______, _______, _______, _______, _______, _______, _______, _______,
     _______,          _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______),
@@ -56,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // extra layer for windows. why ctrl-left on 'b' b-ro
   [_windows2] = LAYOUT_65_split_space(
     _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+    _______,          _______, LCTL(KC_RIGHT), _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     _______,          _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RIGHT,_______, _______, HELLO,            _______,
     _______,                   _______, _______, _______, _______, LCTL(KC_LEFT), _______, _______, _______, _______, _______, _______, _______, _______,
     _______,          _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______),
@@ -73,9 +73,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 bool encoder_update_user(uint8_t index, bool clockwise) {
   if (index == 0) { // first encoder (multiple encoders are supported as an array)
     // if on bottom layers, encoder increases/decreases volume, else skips/goes back music tracks
-    if (layer_state_is(_mac) || layer_state_is(_windows)) {
+    if (layer_state_is(_windows)) {
       if (clockwise) tap_code(KC_VOLU);
       else tap_code(KC_VOLD);
+    }
+    else if (layer_state_is(_mac)) {
+      if (clockwise) tap_code(KC__VOLUP);
+      else tap_code(KC__VOLDOWN);
     }
     else if (layer_state_is(_fn)) {
       if (clockwise) tap_code(KC_MNXT);
